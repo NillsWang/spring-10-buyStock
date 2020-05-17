@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!-- 注册数据源  C3P0数据源-->
+    <bean name="dataSource" 
+    	class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="driverClass" value="${jdbc.driver}"/>
+    	<property name="jdbcUrl" value="${jdbc.url}"/>
+    	<property name="user" value="${jdbc.user}"/>
+    	<property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+   	<!-- 注册dao -->
+    <bean name="accountDao" class="com.wmz.dao.AccountDaoImpl">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean name="stockDao" class="com.wmz.dao.StockDaoImpl">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+   	<!-- 注册service -->
+    <bean name="buyStockService" class="com.wmz.service.BuyStockServiceImpl">
+    	<property name="adao" ref="accountDao"/>
+    	<property name="sdao" ref="stockDao"/>
+    </bean>
+    	
+</beans>
